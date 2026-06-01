@@ -1,5 +1,6 @@
 const app = document.getElementById('app')
 let currentFilter = 'all'
+let tasksRemaining = 0
 
 let tasks = [
 	{
@@ -31,7 +32,7 @@ function renderHeader() {
       ${renderAddForm()}
       ${renderSearchSection()}
       ${renderFilters()}
-      ${renderTasksList(tasks)}
+      ${renderTasksList(sortArr(currentFilter))}
       ${renderStatusBar()}
     </div>
   `
@@ -65,13 +66,13 @@ function renderSearchSection() {
 function renderFilters() {
 	return `
   <div class="filters">
-			<button type="button" data-filter-all class="filter-btn" >
+			<button type="button" data-filter-all class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" >
 				Все
 			</button>
-      	<button type="button" data-filter-active class="filter-btn" >
+      	<button type="button" data-filter-active class="filter-btn ${currentFilter === 'active' ? 'active' : ''}" >
 				Активные
 			</button>
-      	<button type="button" data-filter-completed class="filter-btn" >
+      	<button type="button" data-filter-completed class="filter-btn ${currentFilter === 'completed' ? 'active' : ''}" >
 				Выполненные
 			</button>
 		</div>
@@ -100,7 +101,7 @@ function renderTasksList(arr) {
 function renderStatusBar() {
 	return `
   <div class="stats-bar">
-    <span>Осталось задач: 3</span>
+    <span>Осталось задач: ${tasksRemaining}</span>
     <button type="button" class="clear-btn">
       Очистить выполненные
     </button>
@@ -136,26 +137,36 @@ app.addEventListener('click', e => {
 		const currentTask = tasks.find(item => item.id === +checkbox.id)
 		currentTask.completed = checkbox.checked
 
-		console.log(currentTask)
+		render()
 	}
 
 	if (e.target.closest('[data-filter-all]')) {
-		let currentFilter = 'all'
+		currentFilter = 'all'
+		render()
 	}
 	if (e.target.closest('[data-filter-active]')) {
-		let currentFilter = 'active'
-		sortArr(currentFilter)
+		currentFilter = 'active'
+		render()
+		// const sortTasks = sortArr(currentFilter)
 	}
 	if (e.target.closest('[data-filter-completed]')) {
-		let currentFilter = 'completed'
+		currentFilter = 'completed'
+		render()
 	}
 })
 
 function sortArr(filter) {
+	tasksRemaining = tasks.filter(item => !item.completed).length
+
+	let filterActive
 	if (filter === 'active') {
-		const filterActive = tasks.filter(item => item.completed === false)
-		console.log(filterActive)
+		filterActive = tasks.filter(item => item.completed === false)
+	} else if (filter === 'completed') {
+		filterActive = tasks.filter(item => item.completed === true)
+	} else {
+		filterActive = tasks
 	}
+	return filterActive
 }
 
 function render() {
