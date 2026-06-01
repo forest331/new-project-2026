@@ -1,0 +1,213 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family:
+		system-ui,
+		-apple-system,
+		sans-serif;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 20px;
+}
+
+.app {
+	max-width: 700px;
+	width: 100%;
+	background: white;
+	border-radius: 20px;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+	padding: 30px;
+}
+
+h1 {
+	text-align: center;
+	margin-bottom: 30px;
+	color: #333;
+}
+
+.add-form {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 25px;
+
+	input {
+		flex: 1;
+		padding: 12px 16px;
+		border: 2px solid #e0e0e0;
+		border-radius: 12px;
+		font-size: 16px;
+		transition: 0.2s;
+
+		&:focus {
+			outline: none;
+			border-color: #667eea;
+		}
+	}
+
+	button {
+		background: #667eea;
+		color: white;
+		border: none;
+		padding: 12px 24px;
+		border-radius: 12px;
+		cursor: pointer;
+		font-weight: bold;
+		transition: 0.2s;
+
+		&:hover {
+			background: #5a67d8;
+		}
+	}
+}
+
+/* поиск */
+.search-section {
+	margin-bottom: 20px;
+
+	input {
+		width: 100%;
+		padding: 10px 16px;
+		border: 2px solid #e0e0e0;
+		border-radius: 12px;
+		font-size: 14px;
+	}
+}
+
+/* фильтры кнопками */
+.filters {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 25px;
+
+	button {
+		flex: 1;
+		padding: 10px;
+		background: #f3f4f6;
+		border: none;
+		border-radius: 12px;
+		cursor: pointer;
+		transition: 0.2s;
+		font-weight: 500;
+
+		&.active {
+			background: #667eea;
+			color: white;
+		}
+	}
+}
+
+/* список задач */
+.tasks-list {
+	margin-bottom: 25px;
+	min-height: 300px;
+}
+
+.task-item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px;
+	background: #f9fafb;
+	border-radius: 12px;
+	margin-bottom: 10px;
+	transition: 0.2s;
+
+	&:hover {
+		background: #f3f4f6;
+	}
+
+	input[type='checkbox'] {
+		width: 20px;
+		height: 20px;
+		cursor: pointer;
+	}
+
+	.task-text {
+		flex: 1;
+		font-size: 16px;
+
+		&.completed {
+			text-decoration: line-through;
+			color: #9ca3af;
+		}
+	}
+
+	.task-actions {
+		display: flex;
+		gap: 8px;
+
+		button {
+			background: none;
+			border: none;
+			cursor: pointer;
+			font-size: 18px;
+			padding: 4px 8px;
+			border-radius: 8px;
+			transition: 0.2s;
+
+			&:hover {
+				background: #e5e7eb;
+			}
+		}
+	}
+}
+
+/* режим редактирования */
+.edit-input {
+	flex: 1;
+	padding: 6px 10px;
+	border: 2px solid #667eea;
+	border-radius: 8px;
+	font-size: 16px;
+}
+
+/* статус-бар */
+.stats-bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-top: 20px;
+	border-top: 2px solid #f0f0f0;
+
+	span {
+		color: #6b7280;
+		font-weight: 500;
+	}
+
+	.clear-btn {
+		background: #ef4444;
+		color: white;
+		border: none;
+		padding: 8px 16px;
+		border-radius: 10px;
+		cursor: pointer;
+
+		&:hover {
+			background: #dc2626;
+		}
+	}
+}
+
+/* загрузчик */
+.loader {
+	text-align: center;
+	padding: 40px;
+	color: #667eea;
+	font-size: 20px;
+}
+
+.error-message {
+	background: #fee2e2;
+	color: #dc2626;
+	padding: 12px;
+	border-radius: 12px;
+	text-align: center;
+	margin-bottom: 20px;
+}
