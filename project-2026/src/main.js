@@ -1,6 +1,9 @@
 const app = document.getElementById('app')
 let currentFilter = 'all'
 let tasksRemaining = 0
+let searchQuery = ''
+
+// const searchInput = document.querySelector('.search-section input')
 
 let tasks = [
 	{
@@ -58,6 +61,7 @@ function renderSearchSection() {
 			<input
 				type="text"
 				placeholder="Поиск "
+        value="${searchQuery}"
 			/>
 		</div>
   `
@@ -155,6 +159,17 @@ app.addEventListener('click', e => {
 	}
 })
 
+app.addEventListener('input', e => {
+	if (e.target.closest('.search-section input')) {
+		searchQuery = e.target.value.toLowerCase().trim()
+		render()
+
+		const input = app.querySelector('.search-section input')
+		input.focus()
+		input.setSelectionRange(input.value.length, input.value.length)
+	}
+})
+
 function sortArr(filter) {
 	tasksRemaining = tasks.filter(item => !item.completed).length
 
@@ -166,6 +181,13 @@ function sortArr(filter) {
 	} else {
 		filterActive = tasks
 	}
+
+	if (searchQuery) {
+		filterActive = filterActive.filter(item =>
+			item.text.toLocaleLowerCase().includes(searchQuery),
+		)
+	}
+
 	return filterActive
 }
 
