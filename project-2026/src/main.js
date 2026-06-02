@@ -115,6 +115,8 @@ function renderStatusBar() {
 
 app.addEventListener('click', e => {
 	if (e.target.closest('.add-form-btn')) {
+		currentFilter = 'all'
+
 		const row = e.target.closest('.add-form')
 		const input = row.querySelector('input')
 		if (input.value) {
@@ -155,6 +157,10 @@ app.addEventListener('click', e => {
 	}
 	if (e.target.closest('[data-filter-completed]')) {
 		currentFilter = 'completed'
+		render()
+	}
+	if (e.target.closest('.clear-btn')) {
+		tasks = tasks.filter(item => !item.completed)
 		render()
 	}
 })
