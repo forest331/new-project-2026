@@ -28,6 +28,20 @@ let tasks = [
 	},
 ]
 
+const STORAGE_KEY = 'taskManagerTasks'
+
+function saveToLocalStorage() {
+	localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+}
+
+function loadFromLocalStorage() {
+	const savedTasks = localStorage.getItem(STORAGE_KEY)
+	console.log(savedTasks)
+	if (savedTasks) {
+		tasks = JSON.parse(savedTasks)
+	}
+}
+
 function renderHeader() {
 	return `
   <div class="app">
@@ -125,8 +139,8 @@ app.addEventListener('click', e => {
 			newTask.text = input.value
 			newTask.completed = false
 			tasks.push(newTask)
+			saveToLocalStorage()
 			render()
-			console.log(tasks)
 			input.value = ''
 		}
 	}
@@ -134,6 +148,7 @@ app.addEventListener('click', e => {
 	if (e.target.closest('[data-delete-btn]')) {
 		const btn = e.target.closest('[data-delete-btn]')
 		tasks = tasks.filter(item => item.id !== +btn.dataset.deleteBtn)
+		saveToLocalStorage()
 		render()
 	}
 
@@ -142,25 +157,30 @@ app.addEventListener('click', e => {
 
 		const currentTask = tasks.find(item => item.id === +checkbox.id)
 		currentTask.completed = checkbox.checked
-
+		saveToLocalStorage()
 		render()
 	}
 
 	if (e.target.closest('[data-filter-all]')) {
 		currentFilter = 'all'
+
 		render()
 	}
 	if (e.target.closest('[data-filter-active]')) {
 		currentFilter = 'active'
+
 		render()
 		// const sortTasks = sortArr(currentFilter)
 	}
 	if (e.target.closest('[data-filter-completed]')) {
 		currentFilter = 'completed'
+
 		render()
 	}
 	if (e.target.closest('.clear-btn')) {
 		tasks = tasks.filter(item => !item.completed)
+		currentFilter = 'all'
+		saveToLocalStorage()
 		render()
 	}
 })
@@ -168,6 +188,7 @@ app.addEventListener('click', e => {
 app.addEventListener('input', e => {
 	if (e.target.closest('.search-section input')) {
 		searchQuery = e.target.value.toLowerCase().trim()
+
 		render()
 
 		const input = app.querySelector('.search-section input')
@@ -200,5 +221,5 @@ function sortArr(filter) {
 function render() {
 	app.innerHTML = renderHeader()
 }
-
+loadFromLocalStorage()
 render()
