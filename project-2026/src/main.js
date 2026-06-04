@@ -101,6 +101,14 @@ function renderFilters() {
 }
 
 function renderTasksList(arr) {
+	if (arr.length === 0) {
+		return `
+    <div class='tasks-list'>
+      <div class="empty-message">📭 Нет задач</div>
+    </div>
+    
+    `
+	}
 	const tasksHTML = arr.map(task => {
 		return `
  
