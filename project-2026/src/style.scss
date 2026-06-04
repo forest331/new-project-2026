@@ -170,9 +170,9 @@ h1 {
 
 /* статус-бар */
 .stats-bar {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+	// display: flex;
+	// justify-content: space-between;
+	// align-items: center;
 	padding-top: 20px;
 	border-top: 2px solid #f0f0f0;
 
@@ -210,4 +210,8 @@ h1 {
 	border-radius: 12px;
 	text-align: center;
 	margin-bottom: 20px;
+}
+
+.display {
+	display: none;
 }

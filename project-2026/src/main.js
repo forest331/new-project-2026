@@ -82,16 +82,19 @@ function renderSearchSection() {
 }
 
 function renderFilters() {
+	const taskAll = tasks.length
+	const taskActive = tasks.filter(item => item.completed === false).length
+	const taskCompleted = tasks.filter(item => item.completed === true).length
 	return `
   <div class="filters">
 			<button type="button" data-filter-all class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" >
-				Все
+				Все(${taskAll})
 			</button>
       	<button type="button" data-filter-active class="filter-btn ${currentFilter === 'active' ? 'active' : ''}" >
-				Активные
+				Активные(${taskActive})
 			</button>
       	<button type="button" data-filter-completed class="filter-btn ${currentFilter === 'completed' ? 'active' : ''}" >
-				Выполненные
+				Выполненные(${taskCompleted})
 			</button>
 		</div>
   `
@@ -104,8 +107,14 @@ function renderTasksList(arr) {
 			<div class="task-item">
 				<input type="checkbox" id="${task.id}" ${task.completed === true ? 'checked' : ''} />
 				<span class="task-text">${task.text}</span>
+        <input
+				type="text"
+				placeholder="Введите новую задачу "
+        class="edit-input display"
+        value="${task.text}"
+			  />
 				<div class="task-actions">
-					<button type="button" aria-label="Редактировать">✏️</button>
+					<button type="button" data-editing-btn="${task.id}" aria-label="Редактировать">✏️</button>
 					<button type="button" data-delete-btn="${task.id}"  aria-label="Удалить">🗑️</button>
 				</div>
 			</div>
@@ -183,6 +192,18 @@ app.addEventListener('click', e => {
 		saveToLocalStorage()
 		render()
 	}
+
+	if (e.target.closest('[data-editing-btn]')) {
+		const btn = e.target.closest('[data-editing-btn]')
+		const taskItem = btn.closest('.task-item')
+		const input = taskItem.querySelector('.edit-input')
+
+		const span = taskItem.querySelector('span')
+		span.classList.add('display')
+		input.classList.remove('display')
+		input.focus()
+		input.setSelectionRange(input.value.length, input.value.length)
+	}
 })
 
 app.addEventListener('input', e => {
@@ -194,6 +215,27 @@ app.addEventListener('input', e => {
 		const input = app.querySelector('.search-section input')
 		input.focus()
 		input.setSelectionRange(input.value.length, input.value.length)
+	}
+})
+
+app.addEventListener('keydown', e => {
+	if (e.target.matches('.edit-input')) {
+		if (e.key === 'Enter') {
+			const input = e.target
+			const taskItem = input.closest('.task-item')
+			const id = +taskItem.querySelector('input[type="checkbox"]').id
+
+			const currentTask = tasks.find(item => item.id === id)
+			if (currentTask) {
+				currentTask.text = input.value
+			}
+
+			saveToLocalStorage()
+			render()
+		}
+		if (e.key === 'Escape') {
+			render()
+		}
 	}
 })
 
