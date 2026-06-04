@@ -195,10 +195,16 @@ app.addEventListener('click', e => {
 		render()
 	}
 	if (e.target.closest('.clear-btn')) {
-		tasks = tasks.filter(item => !item.completed)
-		currentFilter = 'all'
-		saveToLocalStorage()
-		render()
+		const hasCompletedTasks = tasks.some(item => item.completed)
+		if (!hasCompletedTasks) {
+			return
+		}
+		if (confirm('Удалить все выполненные задачи?')) {
+			tasks = tasks.filter(item => !item.completed)
+			currentFilter = 'all'
+			saveToLocalStorage()
+			render()
+		}
 	}
 
 	if (e.target.closest('[data-editing-btn]')) {
