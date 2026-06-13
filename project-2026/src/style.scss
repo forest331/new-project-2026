@@ -215,6 +215,51 @@ h1 {
 	margin-bottom: 20px;
 }
 
+.backup-controls {
+	display: flex;
+	gap: 10px;
+	margin-top: 20px;
+	padding-top: 20px;
+	border-top: 2px solid #f0f0f0;
+
+	button {
+		flex: 1;
+		padding: 12px;
+		border: none;
+		border-radius: 12px;
+		font-size: 14px;
+		font-weight: bold;
+		cursor: pointer;
+		transition: 0.2s;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+	}
+
+	/* Стиль для кнопки Экспорт */
+	#exportBtn {
+		background: #f3f4f6;
+		color: #4b5563;
+		border: 2px solid #e5e7eb;
+
+		&:hover {
+			background: #e5e7eb;
+			color: #1f2937;
+		}
+	}
+
+	/* Стиль для кнопки Импорт */
+	#importBtn {
+		background: #764ba2;
+		color: white;
+
+		&:hover {
+			background: #667eea;
+		}
+	}
+}
+
 .display {
 	display: none;
 }

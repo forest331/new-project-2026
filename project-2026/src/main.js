@@ -3,6 +3,10 @@ let currentFilter = 'all'
 let tasksRemaining = 0
 let searchQuery = ''
 
+// const exportBtn = document.getElementById('exportBtn')
+// const importBtn = document.getElementById('importBtn')
+// const importInput = document.getElementById('importInput')
+
 // const searchInput = document.querySelector('.search-section input')
 
 let tasks = [
@@ -51,6 +55,7 @@ function renderHeader() {
       ${renderFilters()}
       ${renderTasksList(sortArr(currentFilter))}
       ${renderStatusBar()}
+      ${renderBackupControls()}
     </div>
   `
 }
@@ -144,6 +149,18 @@ function renderStatusBar() {
   `
 }
 
+function renderBackupControls() {
+	return `
+  <div class="backup-controls">
+  <button id="exportBtn">Экспорт (Скачать JSON)</button>
+  
+  <input type="file" id="importInput" accept=".json" style="display: none;">
+
+  <button id="importBtn">Импорт (Загрузить JSON)</button>
+</div>
+  `
+}
+
 app.addEventListener('click', e => {
 	if (e.target.closest('.add-form-btn')) {
 		currentFilter = 'all'
@@ -218,6 +235,28 @@ app.addEventListener('click', e => {
 		input.focus()
 		input.setSelectionRange(input.value.length, input.value.length)
 	}
+	if (e.target.closest('#exportBtn')) {
+		const tasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []
+		const jsonStr = JSON.stringify(tasks, null, 2)
+		const blob = new Blob([jsonStr], { type: 'application/json' })
+		const url = URL.createObjectURL(blob)
+
+		const a = document.createElement('a')
+		a.href = url
+		a.download = `tasks_backup_${new Date().toISOString().slice(0, 19)}.json`
+
+		document.body.appendChild(a)
+
+		a.click()
+
+		document.body.removeChild(a)
+		URL.revokeObjectURL(url)
+
+		alert(`экспортировано ${tasks.length} задач`)
+	}
+	if (e.target.closest('#importBtn')) {
+		document.getElementById('importInput').click()
+	}
 })
 
 app.addEventListener('input', e => {
@@ -250,6 +289,51 @@ app.addEventListener('keydown', e => {
 		if (e.key === 'Escape') {
 			render()
 		}
+	}
+})
+
+app.addEventListener('change', e => {
+	if (e.target.closest('#importInput')) {
+		const file = e.target.files[0]
+		if (!file) return
+
+		const reader = new FileReader()
+		reader.onload = e => {
+			try {
+				const importedTasks = JSON.parse(e.target.result)
+				console.log(importedTasks)
+				if (!Array.isArray(importedTasks)) {
+					throw new Error('Файл должен содержать массив задач')
+				}
+
+				const isValid = importedTasks.every(
+					task => task && typeof task === 'object' && 'text' in task,
+				)
+				if (!isValid) {
+					throw new Error(
+						'Не верный формат: каждая задача должна содержать "text"',
+					)
+				}
+				if (
+					confirm(
+						`Найдено ${importedTasks.length} задач. Перезаписать текущее?`,
+					)
+				) {
+					localStorage.setItem(STORAGE_KEY, JSON.stringify(importedTasks))
+					loadFromLocalStorage()
+					render()
+				}
+			} catch (error) {
+				alert(`Ошибка импорта ${error.message}`)
+			} finally {
+				e.target.value = ''
+			}
+		}
+		reader.onerror = () => {
+			alert('Ошибка чтения файла')
+			event.target.value = ''
+		}
+		reader.readAsText(file, 'UTF-8')
 	}
 })
 
